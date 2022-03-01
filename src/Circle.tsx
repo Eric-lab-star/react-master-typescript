@@ -11,13 +11,15 @@ interface ContainerProps {
     bgColor: string;
 }
 
+interface CircleProps {
+    bgColor: string,
+    borderColor?: string,
+    
+}
 
-
-
-const Circle = ({bgColor}:ContainerProps) =>{
-    return (
-        <Container bgColor={bgColor}/>
-    );
+const Circle = ({bgColor}:CircleProps) =>{
+    return <Container bgColor={bgColor}/>
+    
 }
 
 export default Circle;
