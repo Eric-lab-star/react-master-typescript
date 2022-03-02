@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { createGlobalStyle } from "styled-components";
-
 import Router from "./Router";
-
 const GlobalStyle = createGlobalStyle`
-
-@import url("https://use.typekit.net/qgm8thg.css");
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -54,14 +50,18 @@ table {
 	box-sizing: border-box;
 }
 body{
-	font-family: liebedoris, sans-serif;
-	font-size: 100px;
+	font-family: sans-serif;
+	font-weight: 500;
+	font-size: 20px;
 	background-color: ${(props) => props.theme.bgColor};
 	color: ${(props) => props.theme.textColor};
 	
 }
-a {
+a, a:visited {
 	text-decoration: none;
+	color: inherit;
+	
+	
 }
 `;
 
