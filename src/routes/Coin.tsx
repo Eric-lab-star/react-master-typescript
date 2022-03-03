@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
-import { isStringObject } from "util/types";
+import { useLocation, Switch, Route, Link } from "react-router-dom";
+import Price from "./Price";
+import Chart from "./Chart";
 
 const Title = styled.h1`
   font-size: 30px;
-  color: ${(props) => props.theme.textColor};
+  color: ${(props) => props.theme.accentColor};
 `;
 
 const Container = styled.div`
@@ -20,6 +21,31 @@ const Header = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const Overview = styled.div`
+  background-color: ${(props) => props.theme.textColor};
+  color: ${(props) => props.theme.bgColor};
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+`;
+const OverviewItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 10px;
+  font-size: 13px;
+  & :last-child {
+    font-size: 15px;
+    color: #ecf0f1;
+  }
+`;
+
+const Description = styled.div`
+  font-size: 13px;
+  padding: 10px;
 `;
 
 interface RouteParams {
@@ -102,19 +128,61 @@ const Coin = () => {
       const priceData = await (
         await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
       ).json();
-
       setInfo(infoData);
       setPrice(priceData);
+      setLoading(false);
     })();
-  }, []);
+  }, [coinId]);
 
   return (
     <Container>
       <Header>
-        <Title>{state?.name || "Loading"}</Title>
+        <Title>
+          {state?.name ? state.name : loading ? "Loading" : info?.name}
+        </Title>
       </Header>
-      {loading ? "Loading..." : null}
-      {price?.quotes.USD.price}
+      {loading ? (
+        "Loading..."
+      ) : (
+        <>
+          <Overview>
+            <OverviewItem>
+              <div>RANK: </div>
+              <div>{info?.rank}</div>
+            </OverviewItem>
+            <OverviewItem>
+              <div>SYMBOL:</div>
+              <div>{info?.symbol}</div>
+            </OverviewItem>
+            <OverviewItem>
+              <div>STARTED DATE:</div>
+              <div>{info?.started_at.slice(0, 10)}</div>
+            </OverviewItem>
+          </Overview>
+          <Description>{info?.description}</Description>
+          <Overview>
+            <OverviewItem>
+              <div>TOTAL SUPPLY: </div>
+              <div>{price?.total_supply}</div>
+            </OverviewItem>
+
+            <OverviewItem>
+              <div>MAX SUPPLY</div>
+              <div>{price?.max_supply}</div>
+            </OverviewItem>
+          </Overview>
+          <Link to={`/${coinId}/chart`}>Chart</Link>
+          <Link to={`/${coinId}/Price`}>Price</Link>
+          <Switch>
+            <Route path={`/${coinId}/price`}>
+              <Price />
+            </Route>
+            <Route path={`/${coinId}/chart`}>
+              <Chart />
+            </Route>
+          </Switch>
+        </>
+      )}
     </Container>
   );
 };
