@@ -20,7 +20,10 @@ interface IHitory {
 const Chart = ({ coinId }: ChartProps) => {
   const { isLoading, data } = useQuery<IHitory[]>(
     ["Price_History", coinId],
-    () => fetchPriceHistoryInfo(coinId)
+    () => fetchPriceHistoryInfo(coinId),
+    {
+      refetchInterval: 5000,
+    }
   );
 
   return (
@@ -51,6 +54,8 @@ const Chart = ({ coinId }: ChartProps) => {
               show: false,
             },
             xaxis: {
+              type: "datetime",
+              categories: data?.map((i) => i.time_close),
               labels: {
                 show: false,
               },
@@ -58,6 +63,11 @@ const Chart = ({ coinId }: ChartProps) => {
             stroke: {
               curve: "smooth",
               width: 3,
+            },
+            tooltip: {
+              y: {
+                formatter: (value) => `$ ${value.toFixed(2)}`,
+              },
             },
           }}
         />

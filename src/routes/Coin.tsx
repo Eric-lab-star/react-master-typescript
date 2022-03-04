@@ -12,6 +12,7 @@ import Price from "./Price";
 import Chart from "./Chart";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchTickerInfo } from "../api";
+import { Helmet } from "react-helmet";
 
 const Title = styled.h1`
   font-size: 30px;
@@ -154,11 +155,17 @@ const Coin = () => {
   );
   const { isLoading: tickersLoading, data: tickerData } = useQuery<InfoPrice>(
     ["tickers", coinId],
-    () => fetchTickerInfo(coinId)
+    () => fetchTickerInfo(coinId),
+    {
+      refetchInterval: 5000,
+    }
   );
   const loading = infoLoading || tickersLoading;
   return (
     <Container>
+      <Helmet>
+        <title>Coin: {infoData ? infoData.name : ""}</title>
+      </Helmet>
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading" : infoData?.name}
@@ -178,8 +185,8 @@ const Coin = () => {
               <div>{infoData?.symbol}</div>
             </OverviewItem>
             <OverviewItem>
-              <div>STARTED DATE:</div>
-              <div>{infoData?.started_at.slice(0, 10)}</div>
+              <div>PRICE:</div>
+              <div>{tickerData?.quotes.USD.price.toFixed(2)}</div>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
