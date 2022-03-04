@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
-import { useLocation, Switch, Route, Link } from "react-router-dom";
+import {
+  useLocation,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+} from "react-router-dom";
 import Price from "./Price";
 import Chart from "./Chart";
 
@@ -46,6 +52,25 @@ const OverviewItem = styled.div`
 const Description = styled.div`
   font-size: 13px;
   padding: 10px;
+`;
+
+const Tabs = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  margin: 10px 0px;
+`;
+const Tab = styled.div<{ isActive: boolean }>`
+  width: 100%;
+  background-color: ${(props) => props.theme.textColor};
+  text-align: center;
+  border-radius: 8px;
+  color: ${(props) => (props.isActive ? props.theme.accentColor : "white")};
+  font-size: 13px;
+  a {
+    padding: 5px;
+    display: block;
+  }
 `;
 
 interface RouteParams {
@@ -120,6 +145,8 @@ const Coin = () => {
   const { state } = useLocation<RouteState>();
   const [info, setInfo] = useState<InfoData>();
   const [price, setPrice] = useState<InfoPrice>();
+  const priceMatch = useRouteMatch(`/:conId/price`);
+  const chartMatch = useRouteMatch(`/:conId/chart`);
   useEffect(() => {
     (async () => {
       const infoData = await (
@@ -171,8 +198,14 @@ const Coin = () => {
               <div>{price?.max_supply}</div>
             </OverviewItem>
           </Overview>
-          <Link to={`/${coinId}/chart`}>Chart</Link>
-          <Link to={`/${coinId}/Price`}>Price</Link>
+          <Tabs>
+            <Tab isActive={chartMatch !== null}>
+              <Link to={`/${coinId}/chart`}>Chart</Link>
+            </Tab>
+            <Tab isActive={priceMatch !== null}>
+              <Link to={`/${coinId}/price`}>Price</Link>
+            </Tab>
+          </Tabs>
           <Switch>
             <Route path={`/${coinId}/price`}>
               <Price />
