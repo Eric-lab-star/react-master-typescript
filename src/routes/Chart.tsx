@@ -32,42 +32,43 @@ const Chart = ({ coinId }: ChartProps) => {
         "Loading chart..."
       ) : (
         <ApexCharts
-          type="line"
+          type="candlestick"
           series={[
             {
-              name: "Price",
-              data: data?.map((i) => i.close),
+              data: data?.map(({ time_open, open, high, low, close }) => ({
+                x: time_open.slice(0, 10),
+                y: [
+                  open.toFixed(2),
+                  high.toFixed(2),
+                  low.toFixed(2),
+                  close.toFixed(2),
+                ],
+              })),
             },
           ]}
           options={{
-            theme: {
-              mode: "dark",
-            },
             chart: {
+              type: "candlestick",
               height: 500,
               width: 500,
               toolbar: {
                 show: false,
               },
             },
-            yaxis: {
-              show: false,
+            title: {
+              text: "CandleStick Chart",
+              align: "left",
             },
             xaxis: {
-              type: "datetime",
-              categories: data?.map((i) => i.time_close),
+              axisTicks: {
+                show: false,
+              },
               labels: {
                 show: false,
               },
             },
-            stroke: {
-              curve: "smooth",
-              width: 3,
-            },
-            tooltip: {
-              y: {
-                formatter: (value) => `$ ${value.toFixed(2)}`,
-              },
+            yaxis: {
+              show: false,
             },
           }}
         />

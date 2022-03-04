@@ -32,6 +32,11 @@ const Header = styled.div`
   align-items: center;
 `;
 
+const BackBtn = styled.div`
+  font-size: 13px;
+  margin: 5px;
+`;
+
 const Overview = styled.div`
   background-color: ${(props) => props.theme.textColor};
   color: ${(props) => props.theme.bgColor};
@@ -162,6 +167,7 @@ const Coin = () => {
     }
   );
   const loading = infoLoading || tickersLoading;
+
   return (
     <Container>
       <Helmet>
@@ -176,6 +182,9 @@ const Coin = () => {
         "Loading..."
       ) : (
         <>
+          <Link to="/">
+            <BackBtn>&larr; Go Back</BackBtn>
+          </Link>
           <Overview>
             <OverviewItem>
               <div>RANK: </div>
@@ -212,7 +221,7 @@ const Coin = () => {
           </Tabs>
           <Switch>
             <Route path={`/${coinId}/price`}>
-              <Price />
+              <Price coinId={coinId} />
             </Route>
             <Route path={`/${coinId}/chart`}>
               <Chart coinId={coinId} />

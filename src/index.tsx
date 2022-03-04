@@ -18,11 +18,15 @@ const Box = () => {
     position: fixed;
     top: 20px;
     left: 20px;
+    border-style: none;
+    font-size: 30px;
+    background-color: transparent;
   `;
 
   return (
     <>
-      <Theme onClick={onClick}>{isClicked ? "Light" : "Dark"}</Theme>
+      <Theme onClick={onClick}>{isClicked ? "☀️" : "☁️"}</Theme>
+
       <ThemeProvider theme={isClicked ? LightTheme : DarkTheme}>
         <App />
       </ThemeProvider>
