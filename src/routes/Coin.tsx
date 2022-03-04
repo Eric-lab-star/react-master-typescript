@@ -10,6 +10,8 @@ import {
 } from "react-router-dom";
 import Price from "./Price";
 import Chart from "./Chart";
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchTickerInfo } from "../api";
 
 const Title = styled.h1`
   font-size: 30px;
@@ -140,13 +142,23 @@ interface InfoPrice {
 }
 
 const Coin = () => {
-  const [loading, setLoading] = useState(true);
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>();
-  const [info, setInfo] = useState<InfoData>();
-  const [price, setPrice] = useState<InfoPrice>();
+
   const priceMatch = useRouteMatch(`/:conId/price`);
   const chartMatch = useRouteMatch(`/:conId/chart`);
+
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId)
+  );
+  const { isLoading: tickersLoading, data: tickerData } = useQuery<InfoPrice>(
+    ["tickers", coinId],
+    () => fetchTickerInfo(coinId)
+  );
+  /* const [loading, setLoading] = useState(true);
+  const [info, setInfo] = useState<InfoData>();
+  const [price, setPrice] = useState<InfoPrice>();
   useEffect(() => {
     (async () => {
       const infoData = await (
@@ -160,12 +172,13 @@ const Coin = () => {
       setLoading(false);
     })();
   }, [coinId]);
-
+ */
+  const loading = infoLoading || tickersLoading;
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? "Loading" : info?.name}
+          {state?.name ? state.name : loading ? "Loading" : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -175,27 +188,27 @@ const Coin = () => {
           <Overview>
             <OverviewItem>
               <div>RANK: </div>
-              <div>{info?.rank}</div>
+              <div>{infoData?.rank}</div>
             </OverviewItem>
             <OverviewItem>
               <div>SYMBOL:</div>
-              <div>{info?.symbol}</div>
+              <div>{infoData?.symbol}</div>
             </OverviewItem>
             <OverviewItem>
               <div>STARTED DATE:</div>
-              <div>{info?.started_at.slice(0, 10)}</div>
+              <div>{infoData?.started_at.slice(0, 10)}</div>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <div>TOTAL SUPPLY: </div>
-              <div>{price?.total_supply}</div>
+              <div>{tickerData?.total_supply}</div>
             </OverviewItem>
 
             <OverviewItem>
               <div>MAX SUPPLY</div>
-              <div>{price?.max_supply}</div>
+              <div>{tickerData?.max_supply}</div>
             </OverviewItem>
           </Overview>
           <Tabs>
