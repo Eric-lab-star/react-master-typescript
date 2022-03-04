@@ -48,7 +48,7 @@ const OverviewItem = styled.div`
   font-size: 13px;
   & :last-child {
     font-size: 15px;
-    color: #ecf0f1;
+    color: ${(props) => props.theme.accentColor};
   }
 `;
 
@@ -68,7 +68,8 @@ const Tab = styled.div<{ isActive: boolean }>`
   background-color: ${(props) => props.theme.textColor};
   text-align: center;
   border-radius: 8px;
-  color: ${(props) => (props.isActive ? props.theme.accentColor : "white")};
+  color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.bgColor};
   font-size: 13px;
   a {
     padding: 5px;
