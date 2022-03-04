@@ -15,3 +15,12 @@ export function fetchTickerInfo(coinId: string) {
     response.json()
   );
 }
+
+export function fetchPriceHistoryInfo(coinId: string) {
+  const endDate = Math.floor(Date.now() / 1000);
+  const oneWeek = 60 * 60 * 24 * 7;
+  const startDate = endDate - oneWeek * 2;
+  return fetch(
+    `${BASE_URL}/coins/${coinId}/ohlcv/historical?start=${startDate}&end=${endDate}`
+  ).then((response) => response.json());
+}
