@@ -66,7 +66,10 @@ interface ICoin {
   type: string;
 }
 
-const Coins = () => {
+interface ICoinsPorps {
+  onClick: () => void;
+}
+const Coins = ({ onClick }: ICoinsPorps) => {
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoin);
   return (
     <Container>
@@ -75,6 +78,7 @@ const Coins = () => {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button onClick={onClick}>Click</button>
       </Header>
       {isLoading ? (
         <Loading>Loading...</Loading>

@@ -1,15 +1,21 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Coin from "./routes/Coin";
 import Coins from "./routes/Coins";
-const Router = () => {
+
+interface IRouterProps {
+  onClick: () => void;
+  isDark: boolean;
+}
+
+const Router = ({ onClick, isDark }: IRouterProps) => {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Switch>
         <Route path="/:coinId">
-          <Coin />
+          <Coin isDark={isDark} />
         </Route>
         <Route path="/">
-          <Coins />
+          <Coins onClick={onClick} />
         </Route>
       </Switch>
     </BrowserRouter>

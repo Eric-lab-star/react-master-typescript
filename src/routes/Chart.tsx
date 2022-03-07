@@ -4,6 +4,7 @@ import ApexCharts from "react-apexcharts";
 
 interface ChartProps {
   coinId: string;
+  isDark: boolean;
 }
 
 interface IHitory {
@@ -17,7 +18,7 @@ interface IHitory {
   market_cap: number;
 }
 
-const Chart = ({ coinId }: ChartProps) => {
+const Chart = ({ coinId, isDark }: ChartProps) => {
   const { isLoading, data } = useQuery<IHitory[]>(
     ["Price_History", coinId],
     () => fetchPriceHistoryInfo(coinId),
@@ -47,6 +48,9 @@ const Chart = ({ coinId }: ChartProps) => {
             },
           ]}
           options={{
+            theme: {
+              mode: isDark ? "dark" : "light",
+            },
             chart: {
               type: "candlestick",
               height: 500,
