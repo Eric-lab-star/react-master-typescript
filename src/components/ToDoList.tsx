@@ -14,7 +14,7 @@ const Header = styled.div`
 
 const ToDoList = () => {
   const toDoList = useRecoilValue(toDoState);
-
+  console.log(toDoList);
   return (
     <div>
       <Header>
@@ -23,7 +23,7 @@ const ToDoList = () => {
       <CreateToDo />
       <ul>
         {toDoList.map((toDo) => (
-          <ToDo {...toDo} />
+          <ToDo key={toDo.id} {...toDo} />
         ))}
       </ul>
     </div>
