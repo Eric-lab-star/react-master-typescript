@@ -34,6 +34,7 @@ const ToDoList = () => {
           {...register("task", { required: "Please write a todo" })}
         />
         <span>{errors?.task?.message}</span>
+
         <button>Add</button>
       </LoginForm>
     </div>
