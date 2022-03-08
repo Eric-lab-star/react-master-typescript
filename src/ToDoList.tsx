@@ -10,14 +10,33 @@ const Wrapper = styled.div`
   height: 100vh;
 `;
 
+interface IForm {
+  gender: string;
+  surname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  password2: string;
+  extraError?: string;
+}
+
 const ToDoList = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const onValid = (data: any) => {
-    console.log(data);
+    setError,
+  } = useForm<IForm>({
+    defaultValues: {
+      email: "@naver.com",
+    },
+  });
+
+  const onValid = (data: IForm) => {
+    if (data.password !== data.password2) {
+      setError("password", { message: "Passwords are not the same" });
+    }
+    setError("extraError", { message: "server offline" });
   };
 
   console.log(errors);
@@ -34,11 +53,11 @@ const ToDoList = () => {
         />
         <span>{errors?.gender?.message}</span>
         <input
-          {...register("name", { required: "required" })}
+          {...register("surname", { required: "required" })}
           type="text"
-          placeholder="name"
+          placeholder="surname"
         />
-        <span>{errors?.name?.message}</span>
+        <span>{errors?.surname?.message}</span>
         <input
           {...register("lastname", {
             required: "required",
@@ -62,8 +81,18 @@ const ToDoList = () => {
           })}
         />
         <span>{errors?.email?.message}</span>
-
+        <input
+          placeholder="password"
+          {...register("password", { required: "required" })}
+        />
+        <span>{errors?.password?.message}</span>
+        <input
+          placeholder="password confirmation"
+          {...register("password2", { required: "required" })}
+        />
+        <span>{errors?.password?.message}</span>
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </Wrapper>
   );
