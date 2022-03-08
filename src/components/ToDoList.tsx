@@ -1,6 +1,7 @@
-import { useRecoilValue } from "recoil";
+import React from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { toDoSelector, toDoState } from "../atoms";
+import { categoryState, toDoSelector } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
@@ -8,39 +9,31 @@ const Header = styled.div`
   font-size: 30px;
   font-weight: 800;
   text-align: center;
-  line-height: 50px;
   height: 50px;
 `;
 
 const ToDoList = () => {
-  const [toDo, doing, done] = useRecoilValue(toDoSelector);
-
+  const toDos = useRecoilValue(toDoSelector);
+  const [category, setCategory] = useRecoilState(categoryState);
+  const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
+    setCategory(event.currentTarget.value);
+  };
+  console.log(category);
   return (
     <div>
       <Header>
         <h1> To Do List</h1>
       </Header>
+      <select value={category} onInput={onInput}>
+        <option value={"To-Do"}>To Do</option>
+        <option value={"DOING"}>Doing</option>
+        <option value={"DONE"}>Done</option>
+      </select>
       <CreateToDo />
-      <h2>To Do</h2>
-      <ul>
-        {toDo.map((toDo) => (
-          <ToDo key={toDo.id} {...toDo} />
-        ))}
-      </ul>
+      {toDos?.map((toDo) => (
+        <ToDo key={toDo.id} {...toDo} />
+      ))}
       <hr />
-      <h2>Doing</h2>
-      <ul>
-        {doing.map((toDo) => (
-          <ToDo key={toDo.id} {...toDo} />
-        ))}
-      </ul>
-      <hr />
-      <h2>Done</h2>
-      <ul>
-        {done.map((toDo) => {
-          return <ToDo key={toDo.id} {...toDo} />;
-        })}
-      </ul>
     </div>
   );
 };
